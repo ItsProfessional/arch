@@ -1,21 +1,29 @@
 setopt -o promptsubst
 
-PS1="\$(pl_ps1)"
-PS2="\$(pl_ps2)"
-PS3="\$(pl_ps3)"
-PS4="\$(pl_ps4)"
+COL_OFF="%k%f"
+COL_NOR="%F{${COL_DWM_GRAY4}}%K{${COL_DWM_CYAN}}"
+COL_WAR="%F{black}%K{yellow}"
+COL_ERR="%F{black}%K{red}"
 
+PS1="${COL_NOR}:${COL_OFF}\${PR_WAR}\${PR_ERR}${COL_NOR};${COL_OFF} "
+PS2="${COL_NOR}${PS2}${COL_OFF} "
+PS3="${COL_NOR}${PS3}${COL_OFF} "
+PS4="${COL_NOR}${PS4}${COL_OFF} "
 
 function precmd() {
 
-	# set LAST_RC only if the last execution failed; ignore ^C or empty executions
+	# set PR_ERR only if the last execution failed; ignore ^C or empty executions
 	rc=${?}
-	if [ -z "${PRE_EXECD}" ]; then
-		LAST_RC=0
-	else
-		LAST_RC=${rc}
+	PR_ERR=
+	if [ -n "${PRE_EXECD}" -a "${rc}" -ne 0 ]; then
+		PR_ERR="${COL_ERR} ${rc} ${COL_OFF}"
 	fi
 	PRE_EXECD=
+
+	PR_WAR=
+	if [ -z "${TMUX}" ]; then
+		PR_WAR="${COL_WAR} -tm ${COL_OFF}"
+	fi
 
 	# terminal title
 	if [ -n "${ALACRITTY_THEME}" ]; then
@@ -24,11 +32,9 @@ function precmd() {
 		print -Pn "${terminfo[tsl]}%~$(__git_ps1)${terminfo[fsl]}"
 	fi
 }
-
 function preexec() {
 	PRE_EXECD="oui"
 }
-
 
 # git PS1
 if [ -f /usr/share/git/completion/git-prompt.sh ]; then
@@ -39,57 +45,3 @@ if [ -f /usr/share/git/completion/git-prompt.sh ]; then
 else
 	function __git_ps1() { : }
 fi
-
-
-# powerline prompt builder
-# https://github.com/ohmyzsh/ohmyzsh/blob/c1b798aff39942b2f23a0a5f2ef206ebc8ce4970/themes/agnoster.zsh-theme
-PL_CUR_BG="NONE"
-PL_SEP=$'\ue0b0'
-
-pl_prompt_seg() {
-	if [ "${PL_CUR_BG}" != "NONE" -a "${1}" != "${PL_CUR_BG}" ]; then
-		echo -n " %{%K{${1}}%F{$PL_CUR_BG}%}$PL_SEP%{%F{${2}}%} "
-	else
-		echo -n "%{%K{${1}}%}%{%}%F{${2}} "
-	fi
-	PL_CUR_BG="${1}"
-	echo -n "${3}"
-}
-
-pl_prompt_end() {
-	if [ -n ${PL_CUR_BG} ]; then
-		echo -n " %{%k%F{${PL_CUR_BG}}%}${PL_SEP}"
-	else
-		echo -n "%{%k%}"
-	fi
-	echo -n "%{%f%} "
-	PL_CUR_BG=
-}
-
-pl_ps1() {
-	pl_prompt_seg "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" ":"
-	if [ "${LAST_RC}" -ne 0 ]; then
-		pl_prompt_seg "red" "black" "${LAST_RC}"
-	fi
-	if [ -z "${TMUX}" ]; then
-		pl_prompt_seg "yellow" "black" "!tmux"
-	fi
-	pl_prompt_seg "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" ";"
-	pl_prompt_end
-}
-
-pl_ps2() {
-	pl_prompt_seg "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "%_>"
-	pl_prompt_end
-}
-
-pl_ps3() {
-	pl_prompt_seg "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "?#"
-	pl_prompt_end
-}
-
-pl_ps4() {
-	pl_prompt_seg "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "+%N:%i>"
-	pl_prompt_end
-}
-
