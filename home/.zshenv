@@ -31,6 +31,11 @@ export XDG_CACHE_HOME=$HOME/.cache
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_DATA_HOME=$HOME/.local/share
 
+# moar history
+HISTFILE=~/.histfile
+HISTSIZE=10000
+SAVEHIST=10000
+
 # dwm colours
 COL_DWM_GRAY1="#222222"
 COL_DWM_GRAY2="#444444"
