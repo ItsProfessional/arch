@@ -95,6 +95,17 @@ function resetcursor() {
 zle -N zle-line-finish resetcursor
 
 
+# git PS1
+if [ -f /usr/share/git/completion/git-prompt.sh ]; then
+	GIT_PS1_SHOWDIRTYSTATE="true"
+	GIT_PS1_SHOWSTASHSTATE="true"
+	GIT_PS1_SHOWUPSTREAM="auto"
+	. /usr/share/git/completion/git-prompt.sh
+else
+	function __git_ps1() { : }
+fi
+
+
 # prompts: https://github.com/ohmyzsh/ohmyzsh/blob/c1b798aff39942b2f23a0a5f2ef206ebc8ce4970/themes/agnoster.zsh-theme
 setopt -o promptsubst
 PL_CUR_BG="NONE"
@@ -156,17 +167,6 @@ function precmd() {
 function preexec() {
 	PRE_EXECD="oui"
 }
-
-
-# git PS1
-if [ -f /usr/share/git/completion/git-prompt.sh ]; then
-	GIT_PS1_SHOWDIRTYSTATE="true"
-	GIT_PS1_SHOWSTASHSTATE="true"
-	GIT_PS1_SHOWUPSTREAM="auto"
-	. /usr/share/git/completion/git-prompt.sh
-else
-	function __git_ps1() { : }
-fi
 
 
 # use the keychain wrapper to start ssh-agent if needed
