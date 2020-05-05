@@ -1,9 +1,9 @@
 setopt -o promptsubst
 
-PS1="\$(build_ps1)"
-PS2="\$(build_ps2)"
-PS3="\$(build_ps3)"
-PS4="\$(build_ps4)"
+PS1="\$(pl_ps1)"
+PS2="\$(pl_ps2)"
+PS3="\$(pl_ps3)"
+PS4="\$(pl_ps4)"
 
 
 function precmd() {
@@ -46,7 +46,7 @@ fi
 PL_CUR_BG="NONE"
 PL_SEP=$'\ue0b0'
 
-prompt_segment() {
+pl_prompt_seg() {
 	if [ "${PL_CUR_BG}" != "NONE" -a "${1}" != "${PL_CUR_BG}" ]; then
 		echo -n " %{%K{${1}}%F{$PL_CUR_BG}%}$PL_SEP%{%F{${2}}%} "
 	else
@@ -56,7 +56,7 @@ prompt_segment() {
 	echo -n "${3}"
 }
 
-prompt_end() {
+pl_prompt_end() {
 	if [ -n ${PL_CUR_BG} ]; then
 		echo -n " %{%k%F{${PL_CUR_BG}}%}${PL_SEP}"
 	else
@@ -66,30 +66,30 @@ prompt_end() {
 	PL_CUR_BG=
 }
 
-build_ps1() {
-	prompt_segment "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" ":"
+pl_ps1() {
+	pl_prompt_seg "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" ":"
 	if [ "${LAST_RC}" -ne 0 ]; then
-		prompt_segment "red" "black" "${LAST_RC}"
+		pl_prompt_seg "red" "black" "${LAST_RC}"
 	fi
 	if [ -z "${TMUX}" ]; then
-		prompt_segment "yellow" "black" "!tmux"
+		pl_prompt_seg "yellow" "black" "!tmux"
 	fi
-	prompt_segment "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" ";"
-	prompt_end
+	pl_prompt_seg "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" ";"
+	pl_prompt_end
 }
 
-build_ps2() {
-	prompt_segment "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "%_>"
-	prompt_end
+pl_ps2() {
+	pl_prompt_seg "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "%_>"
+	pl_prompt_end
 }
 
-build_ps3() {
-	prompt_segment "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "?#"
-	prompt_end
+pl_ps3() {
+	pl_prompt_seg "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "?#"
+	pl_prompt_end
 }
 
-build_ps4() {
-	prompt_segment "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "+%N:%i>"
-	prompt_end
+pl_ps4() {
+	pl_prompt_seg "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "+%N:%i>"
+	pl_prompt_end
 }
 
