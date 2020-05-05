@@ -1,4 +1,9 @@
-PS1="%{%f%k%}\$(build_prompt) "
+setopt -o promptsubst
+
+PS1="\$(build_ps1)"
+PS2="\$(build_ps2)"
+PS3="\$(build_ps3)"
+PS4="\$(build_ps4)"
 
 
 function precmd() {
@@ -8,7 +13,7 @@ function precmd() {
 	if [ -z "${PRE_EXECD}" ]; then
 		LAST_RC=0
 	else
-		LAST_RC="${rc}"
+		LAST_RC=${rc}
 	fi
 	PRE_EXECD=
 
@@ -38,7 +43,6 @@ fi
 
 # powerline prompt builder
 # https://github.com/ohmyzsh/ohmyzsh/blob/c1b798aff39942b2f23a0a5f2ef206ebc8ce4970/themes/agnoster.zsh-theme
-setopt -o promptsubst
 PL_CUR_BG="NONE"
 PL_SEP=$'\ue0b0'
 
@@ -58,11 +62,11 @@ prompt_end() {
 	else
 		echo -n "%{%k%}"
 	fi
-	echo -n "%{%f%}"
+	echo -n "%{%f%} "
 	PL_CUR_BG=
 }
 
-build_prompt() {
+build_ps1() {
 	prompt_segment "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" ":"
 	if [ "${LAST_RC}" -ne 0 ]; then
 		prompt_segment "red" "black" "${LAST_RC}"
@@ -71,6 +75,21 @@ build_prompt() {
 		prompt_segment "yellow" "black" "!tmux"
 	fi
 	prompt_segment "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" ";"
+	prompt_end
+}
+
+build_ps2() {
+	prompt_segment "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "%_>"
+	prompt_end
+}
+
+build_ps3() {
+	prompt_segment "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "?#"
+	prompt_end
+}
+
+build_ps4() {
+	prompt_segment "${COL_DWM_CYAN}" "${COL_DWM_GRAY4}" "+%N:%i>"
 	prompt_end
 }
 
