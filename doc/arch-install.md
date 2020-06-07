@@ -4,15 +4,15 @@ Use the standard [Arch installation guide](https://wiki.archlinux.org/index.php/
 
 ## Preparation
 
-### Keymap
-
-`loadkeys dvorak-programmer`
-
 ### Boot
 
 Boot a [bootable USB image](https://wiki.archlinux.org/index.php/USB_flash_installation_media)
 
 You can use `wifi-menu` to connect to a secured network, temporarily.
+
+### Keymap
+
+`loadkeys dvorak-programmer`
 
 ### Start SSHD for easier installation from a remote system
 
@@ -139,6 +139,9 @@ UUID=c32b0c6b-e413-4eff-a873-6eab329dd245       none            swap            
 ### Install Packages Needed For Installation
 
 `pacman -S btrfs-progs git linux-firmware networkmanager openssh pkgfile sudo efibootmgr vim wget zsh`
+
+Populate the package cache:
+`pkgfile --update`
 
 Link vi and others to vim:
 ```sh
@@ -306,12 +309,6 @@ options cryptdevice=UUID=b874fabd-ae06-485e-b858-6532cec92d3c:cryptlvm root=/dev
 ```
 
 ## Reboot
-
-Populate the pacman cache first.
-
-```sh
-pkgfile --update
-```
 
 Exit chroot and reboot
 
