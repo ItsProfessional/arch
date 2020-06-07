@@ -1,29 +1,20 @@
-
-
-
-
-
-
-
-
-
 # Arch Installation
 
 Use the standard [Arch installation guide](https://wiki.archlinux.org/index.php/installation_guide) for reference.
 
-# Preparation
+## Preparation
 
-## Keymap
+### Keymap
 
 `loadkeys dvorak-programmer`
 
-## Boot
+### Boot
 
 Boot a [bootable USB image](https://wiki.archlinux.org/index.php/USB_flash_installation_media)
 
 You can use `wifi-menu` to connect to a secured network, temporarily.
 
-## Start SSHD for easier installation from a remote system
+### Start SSHD for easier installation from a remote system
 
 ```sh
 passwd
@@ -34,9 +25,9 @@ Connect from a remote machine
 
 `ssh root@some.ip.address`
 
-# Filesystems
+## Filesystems
 
-## Partitions
+### Partitions
 
 Find your destination disk with `lsblk -f`
 
@@ -61,20 +52,20 @@ name 3 btrfs
 quit
 ```
 
-## Fat32 Boot
+### Fat32 Boot
 
 ```sh
 mkfs.vfat -n boot -F32 /dev/nvme0n1p1
 ```
 
-## Swap
+### Swap
 
 ```sh
 mkswap /dev/nvme0n1p2 -L swap
 swapon /dev/nvme0n1p2
 ```
 
-## Btrfs Root
+### Btrfs Root
 
 ```sh
 mkfs.btrfs /dev/nvme0n1p3 -L btrfs
@@ -88,7 +79,7 @@ btrfs subvolume create ...
 umount /mnt
 ```
 
-## Mount All Filesystems
+### Mount All Filesystems
 
 ```sh
 mount /dev/nvme0n1p3 /mnt -o subvol=/@root
@@ -110,15 +101,15 @@ nvme0n1
 └─nvme0n1p3 btrfs          btrfs       4eb9de2a-5c04-4914-931d-081bbf9b8713    222G     0% /mnt/home
 ```
 
-# Installation
+## Installation
 
-## Bootstrap
+### Bootstrap
 
 Edit `/etc/pacman.d/mirrorlist` and put a local one on top
 
 `pacstrap -i /mnt base base-devel`
 
-## Setup /etc/fstab
+### Setup /etc/fstab
 
 `genfstab -U /mnt >> /mnt/etc/fstab`
 
@@ -141,11 +132,11 @@ UUID=4eb9de2a-5c04-4914-931d-081bbf9b8713       /home           btrfs           
 UUID=c32b0c6b-e413-4eff-a873-6eab329dd245       none            swap            defaults        0 0
 ```
 
-## Chroot
+### Chroot
 
 `arch-chroot /mnt /bin/bash`
 
-## Install Packages Needed For Installation
+### Install Packages Needed For Installation
 
 `pacman -S btrfs-progs git linux-firmware networkmanager openssh pkgfile sudo efibootmgr vim wget zsh`
 
@@ -156,7 +147,7 @@ ln -s /usr/bin/vim /usr/local/bin/vi
 ln -s /usr/bin/vim /usr/local/bin/view
 ```
 
-## Locale And Time
+### Locale And Time
 
 Uncomment your desired UTF8 locale in `/etc/locale.gen`. Also `en_US` as too many things expect it :sigh:.
 
@@ -168,18 +159,18 @@ Uncomment your desired UTF8 locale in `/etc/locale.gen`. Also `en_US` as too man
 
 `hwclock --systohc --utc`
 
-## Update pacman Packages And Installations To Current
+### Update pacman Packages And Installations To Current
 
 `pacman -Suy`
 
-## Install And Enable Basic Networking
+### Install And Enable Basic Networking
 
 ```sh
 systemctl enable sshd
 systemctl enable NetworkManager
 ```
 
-# Users
+## Users
 
 Invoke `visudo` and uncomment the following:
 
@@ -200,7 +191,7 @@ TODO:
 retire efibootstub
 
 
-# Booting
+## Booting
 
 ## EFISTUB Preparation
 
