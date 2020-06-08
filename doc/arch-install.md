@@ -255,7 +255,7 @@ options initrd=\amd-ucode.img initrd=\initramfs-linux.img root=UUID= resume=UUID
 Change amd to intel as needed.
 
 Inject the UUIDs of the root and swap partitions:
-```
+```sh
 blkid -s UUID -o value /dev/nvme0n1p3 >> /boot/loader/entries/arch.conf
 blkid -s UUID -o value /dev/nvme0n1p2 >> /boot/loader/entries/arch.conf
 ```
@@ -264,7 +264,7 @@ Move them into their correct places: root and resume.
 ### Reboot
 
 Cleanly reboot:
-```
+```sh
 exit
 swapoff /dev/nvme0n1p2
 umount /mnt/home
@@ -368,14 +368,16 @@ todotxt
 xlayoutdisplay
 `
 
+Install video drivers at this point.
+
 ### Setup CLI User Environment
 
 Install your public/private keys into `~/.ssh`, from a remote machine:
-```
+```sh
 scp -pr .ssh gigantor:/home/alex
 ```
 
-```
+```sh
 git clone git@github.com:alex-courtis/arch.git ~/.dotfiles
 RCRC="${HOME}/.dotfiles/rcrc" rcup -v
 ```
@@ -383,7 +385,7 @@ RCRC="${HOME}/.dotfiles/rcrc" rcup -v
 ### Build Desktop Environment
 
 Window manager:
-```
+```sh
 mkdir src
 cd src
 git clone git@github.com:alex-courtis/dwm.git
@@ -405,6 +407,8 @@ Redshift:
 ### Done
 
 Everything should start in your X environment... check `~/.local/share/xorg/Xorg.0.log`, `/tmp/x.${USER}.log`, `dmesg --human` and any console errors for oddities.
+
+## Audio Drivers
 
 ## Video Drivers
 
