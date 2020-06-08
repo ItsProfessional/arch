@@ -250,7 +250,7 @@ title Arch Linux
 linux /vmlinuz-linux
 initrd /amd-ucode.img
 initrd /initramfs-linux.img
-options initrd=\amd-ucode.img initrd=\initramfs-linux.img root=UUID= resume=UUID= rootflags=subvol=/@root rw quiet
+options root=UUID= resume=UUID= rootflags=subvol=/@root rw quiet
 ```
 Change amd to intel as needed.
 
@@ -275,11 +275,11 @@ reboot
 
 ## Post Install
 
-ssh in as yourself.
+Log in as yourself.
 
 ### Set Hostname
 
-Use `nmtui` to setup the system network connection.
+Use `sudo nmtui` to setup the system network connection.
 
 Apply the hostname e.g.:
 
