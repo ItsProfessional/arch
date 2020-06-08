@@ -324,6 +324,7 @@ hunspell-en_AU
 hunspell-en_GB
 jq
 keychain
+man-db
 network-manager-applet
 nfs-utils
 numlockx
@@ -332,7 +333,6 @@ noto-fonts-emoji
 noto-fonts-extra
 pacman-contrib
 parcellite
-pavucontrol
 pwgen
 rsync
 scrot
@@ -361,7 +361,6 @@ zsh-completions
 dapper
 gron-bin
 libinput-gestures
-pulseaudio-ctl
 rcm
 redshift-minimal
 todotxt
@@ -410,6 +409,23 @@ Everything should start in your X environment... check `~/.local/share/xorg/Xorg
 
 ## Audio Drivers
 
+### Intel Corporation Device 02c8
+
+Firmware:
+`pacaur -S sof-firmware`
+
+Pulse doesn't load it automatically. Modify `/etc/pulse/default.pa`:
+
+```
+load-module module-alsa-sink device=hw:0,0 channels=4
+load-module module-alsa-source device=hw:0,6 channels=4
+```
+
+That assumes that the device is index 0. Ensure this via snd kernel module config `/etc/modprobe.d/snd.conf`:
+```
+options snd slots=snd_soc_skl_hda_dsp
+```
+
 ## Video Drivers
 
 ### Modern AMD
@@ -418,7 +434,7 @@ Add `amdgpu` to MODULES in `/etc/mkinitcpio.conf`
 
 Install the X driver and (re)generate the boot image:
 
-`pacman -S xf86-video-amdgpu libva-mesa-driver linux`
+`pacaur -S xf86-video-amdgpu libva-mesa-driver linux`
 
 ### Intel Only (lightweight laptop)
 
