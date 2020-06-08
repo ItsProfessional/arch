@@ -527,7 +527,7 @@ TODO: linux 5.0+ allows btrfs swap files
 Same size as physical RAM.
 
 ```sh
-lvcreate -L 2G vg1 -n swap
+lvcreate -L 32G vg1 -n swap
 mkswap /dev/vg1/swap -L swap
 swapon /dev/vg1/swap
 ```
