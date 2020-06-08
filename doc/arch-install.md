@@ -507,9 +507,9 @@ mkfs.vfat -n boot -F32 /dev/nvme0n1p1
 
 Optional, if multiple devices available.
 
-mdadm --create --verbose --level=0 --metadata=1.2 --raid-devices=2 --homehost=gigantor /dev/md0 /dev/nvme0n1p2 /dev/nvme1n1p2 /dev/nvme2n1p2
+`mdadm --create --verbose --level=0 --metadata=1.2 --raid-devices=2 --homehost=gigantor /dev/md0 /dev/nvme0n1p2 /dev/nvme1n1p2 /dev/nvme2n1p2`
 
-Use /dev/md0 as the device for LUKS.
+Use `/dev/md0` as the device for LUKS.
 
 ## LVM on LUKS
 
@@ -527,7 +527,7 @@ TODO: linux 5.0+ allows btrfs swap files
 Same size as physical RAM.
 
 ```sh
-lvcreate -L 16G vg1 -n swap
+lvcreate -L 2G vg1 -n swap
 mkswap /dev/vg1/swap -L swap
 swapon /dev/vg1/swap
 ```
@@ -579,4 +579,3 @@ initrd=\initramfs-linux.img cryptdevice=UUID=b874fabd-ae06-485e-b858-6532cec92d3
 ```
 
 The UUID is of the raw device `/dev/nvme0n1p2`
-
