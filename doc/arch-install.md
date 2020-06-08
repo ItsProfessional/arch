@@ -368,7 +368,7 @@ todotxt
 xlayoutdisplay
 `
 
-Install video drivers at this point.
+Install https://github.com/alex-courtis/arch/blob/master/doc/arch-install.md#audio-drivers and https://github.com/alex-courtis/arch/blob/master/doc/arch-install.md#video-drivers this point.
 
 ### Setup CLI User Environment
 
