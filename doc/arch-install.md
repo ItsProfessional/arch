@@ -65,7 +65,7 @@ mkswap /dev/nvme0n1p2 -L swap
 swapon /dev/nvme0n1p2
 ```
 
-### Btrfs Root
+### Btrfs Root and Subvolumes
 
 ```sh
 mkfs.btrfs /dev/nvme0n1p3 -L btrfs
@@ -79,7 +79,7 @@ btrfs subvolume create ...
 umount /mnt
 ```
 
-### Mount All Filesystems
+### Mount All
 
 ```sh
 mount /dev/nvme0n1p3 /mnt -o subvol=/@root
@@ -107,7 +107,7 @@ nvme0n1
 
 Edit `/etc/pacman.d/mirrorlist` and put a local one on top
 
-`pacstrap -i /mnt base base-devel`
+`pacstrap -i /mnt base base-devel linux linux-firmware`
 
 ### Setup /etc/fstab
 
@@ -136,9 +136,9 @@ UUID=c32b0c6b-e413-4eff-a873-6eab329dd245       none            swap            
 
 `arch-chroot /mnt /bin/bash`
 
-### Install Packages Needed For Installation
+### Packages Needed For Installation
 
-`pacman -S btrfs-progs git linux-firmware networkmanager openssh pkgfile sudo efibootmgr vim wget zsh`
+`pacman -S btrfs-progs efibootmgr git mkinitcpio networkmanager openssh pkgfile sudo terminus-font vim zsh`
 
 Populate the package cache:
 `pkgfile --update`
@@ -173,6 +173,18 @@ systemctl enable sshd
 systemctl enable NetworkManager
 ```
 
+### Nonstardard Keymap
+
+Add the following to `/etc/vconsole.conf`
+```
+KEYMAP=dvorak-programmer
+```
+
+### Microcode
+
+Install the CPU microcode for amd or intel:
+`pacman -S amd-ucode`
+
 ## Users
 
 Invoke `visudo` and uncomment the following:
@@ -189,104 +201,36 @@ useradd -m -g users -G wheel,input -c "Alexander Courtis" -s /bin/zsh alex
 passwd alex
 ```
 
-Revised to this point, following along with a new system installation.
-TODO:
-retire efibootstub
-
-
 ## Booting
 
-## EFISTUB Preparation
-
-I'm bored with boot loaders and UEFI just doesn't need them. Simply point the EFI boot entry to the ESP, along with the kernel arguments.
-
-Copy `bin/efibootstub` from this repository into `/usr/local/bin`
-
-Determine the UUID of the your crypto_LUKS volume. Note that it's the raw device, not the crypto volume itself. e.g.
-
-`blkid -s UUID -o value /dev/nvme0n1p2`
-
-Create kernel command line in `/boot/kargs` e.g.
-```
-initrd=\initramfs-linux.img cryptdevice=UUID=b874fabd-ae06-485e-b858-6532cec92d3c:cryptlvm root=/dev/vg1/btrfs rootflags=subvol=/@root resume=/dev/vg1/swap rw quiet
-```
-
-If using Dell 5520, it's necessary to disable PCIe Active State Power Management as per (https://www.thomas-krenn.com/en/wiki/PCIe_Bus_Error_Status_00001100).
-
-Append to `/boot/kargs`:
-```
-pcie_aspm=off
-```
-
-## Create initrd and kernel
+### Create Boot Image
 
 Update the boot image configuration: `/etc/mkinitcpio.conf`
 
-Add an encrypt hook and move the keyboard configration before it, so that we can type the passphrase.
-
-Add lvm2 before filessystems so that we may open the volumes.
-
-Add resume hook after filesystems.
-
-Add usr and shutdown hooks so that the root filesystem may be retained during shutdown and cleanly unmounted.
-
-Add consolefont and keymap after base, so that the disk encryption password may be entered sanely.
-
-If using software raid, add mdadm_udev before encrypt.
-
-```sh
-HOOKS=(base consolefont keymap udev autodetect modconf block keyboard mdadm_udev encrypt lvm2 filesystems resume fsck usr shutdown)
+Add hooks:
+```
+HOOKS=(
+	consolefont
+	keymap
+	base
+	udev
+	autodetect
+	modconf
+	block
+	filesystems
+	keyboard
+	fsck
+	resume
+	usr
+	shutdown
+)
 ```
 
 (Re)generate the boot image:
 
 `pacman -S linux`
 
-# System Specific
-
-## AMD CPU Microcode
-
-Install AMD CPU microcode updater: `pacman -S amd-ucode`
-
-Prepend `initrd=\amd-ucode.img ` to `/boot/kargs`.
-
-## Intel CPU Microcode
-
-Install Intel CPU microcode updater: `pacman -S intel-ucode`
-
-Prepend `initrd=\intel-ucode.img ` to `/boot/kargs`.
-
-## Nonstardard Keymap
-
-Add the following to `/etc/vconsole.conf`
-
-```
-KEYMAP=dvorak-programmer
-```
-
-## Larger Console Fonts
-
-In the case of a laptop with high resolution, it is necessary to increase the font size when using virtual consoles.
-
-```
-pacman -S terminus-font
-```
-
-Add the following to `/etc/vconsole.conf`
-
-```
-FONT=ter-v32n
-```
-
-## Create The EFISTUB
-
-```sh
-efibootstub /dev/nvme0n1 1
-```
-
-### Alternative: systemd-boot
-
-Some terribad UEFI implementations such as Dell 5520 don't want to boot directly from UEFI; they only seem to support booting from an .efi file, hence we use systemd-boot.
+### systemd-boot
 
 ```sh
 bootctl --path=/boot install
@@ -298,27 +242,40 @@ default arch
 timeout 1
 ```
 
-Add `/boot/loader/entries/arch.conf`, using `/boot/kargs` for options, with initrd moved up:
-
+Create `/boot/loader/entries/arch.conf`:
 ```
 title Arch Linux
 linux /vmlinuz-linux
-initrd /intel-ucode.img
+initrd /amd-ucode.img
 initrd /initramfs-linux.img
-options cryptdevice=UUID=b874fabd-ae06-485e-b858-6532cec92d3c:cryptlvm root=/dev/vg1/btrfs rootflags=subvol=/@root resume=/dev/vg1/swap pcie_aspm=off rw
+options initrd=\amd-ucode.img initrd=\initramfs-linux.img root=UUID= resume=UUID= rootflags=subvol=/@root rw quiet
+```
+Change amd to intel as needed.
+
+Inject the UUIDs of the root and swap partitions:
+```
+blkid -s UUID -o value /dev/nvme0n1p3 >> /boot/loader/entries/arch.conf
+blkid -s UUID -o value /dev/nvme0n1p2 >> /boot/loader/entries/arch.conf
+```
+Move them into their correct places: root and resume.
+
+### Reboot
+
+Cleanly reboot:
+```
+exit
+swapoff /dev/nvme0n1p2
+umount /mnt/home
+umount /mnt/boot
+umount /mnt
+reboot
 ```
 
-## Reboot
+## Post Install
 
-Exit chroot and reboot
+ssh in as yourself.
 
-## Remove Default User
-
-Any default users (with known passwords) should be removed e.g.
-
-`userdel -r alarm`
-
-## Set Hostname
+### Set Hostname
 
 Use `nmtui` to setup the system network connection.
 
@@ -330,17 +287,99 @@ Add the hostname to `/etc/hosts` first, as IPv4 local:
 
 `127.0.0.1	gigantor`
 
-## Enable NTP Sync
+### Enable NTP Sync
 
 `timedatectl set-ntp true`
 
 You can check this with: `timedatectl status`
 
-## Setup CLI User Environment
+### Install [pacaur](https://github.com/ajlende/dotbot-pacaur) to manage system and AUR packages.
 
-Install your public/private keys under `~/.ssh`
+```sh
+cd /tmp
+git clone https://aur.archlinux.org/auracle-git.git
+cd auracle-git
+makepkg -sri
+cd ..
+git clone https://aur.archlinux.org/pacaur.git
+cd pacaur
+makepkg -sri
+```
 
-See [Usage](#usage)
+### Install Packages
+
+AUR packages are at the end.
+
+`pacaur -S
+alacritty
+autofs
+calc
+chromium
+dmenu
+efibootmgr
+gpm
+hunspell-en_AU
+hunspell-en_GB
+jq
+keychain
+network-manager-applet
+nfs-utils
+numlockx
+noto-fonts
+noto-fonts-emoji
+noto-fonts-extra
+pacman-contrib
+parcellite
+pavucontrol
+pwgen
+rsync
+scrot
+slock
+sysstat
+terminus-font
+the_silver_searcher
+tmux
+ttf-dejavu
+ttf-hack
+udisks2
+unzip
+xautolock
+xdg-utils
+xmlstarlet
+xorg-fonts-100dpi
+xorg-fonts-75dpi
+xorg-fonts-misc
+xorg-server
+xorg-xbacklight
+xorg-xinit
+xorg-xrandr
+xsel
+yq
+zsh-completions
+
+dapper
+gron-bin
+libinput-gestures
+pulseaudio-ctl
+rcm
+redshift-minimal
+todotxt
+xlayoutdisplay
+`
+
+### Setup CLI User Environment
+
+Install your public/private keys into `~/.ssh`, from a remote machine:
+```
+scp -pr .ssh gigantor:/home/alex
+```
+
+```
+git clone git@github.com:alex-courtis/arch.git ~/.dotfiles
+RCRC="${HOME}/.dotfiles/rcrc" rcup -v
+```
+
+<<<<<<<
 
 # Post Installation
 
@@ -389,93 +428,6 @@ Ban the nouveau module, which can block bbswitch, via `/etc/modprobe.d/blacklist
 ```
 blacklist nouveau
 ```
-
-## Install Packages
-
-Use [pacaur](https://github.com/ajlende/dotbot-pacaur) to manage system and AUR packages.
-
-```sh
-cd /tmp
-git clone https://aur.archlinux.org/auracle-git.git
-cd auracle-git
-makepkg -sri
-cd ..
-git clone https://aur.archlinux.org/pacaur.git
-cd pacaur
-makepkg -sri
-```
-
-### Arch Packages I Like
-
-#### Official
-
-`pacman -S ...`
-
-alacritty
-autofs
-calc
-chromium
-dmenu
-efibootmgr
-gpm
-hunspell-en_AU
-hunspell-en_GB
-jq
-keychain
-network-manager-applet
-nfs-utils
-numlockx
-noto-fonts
-noto-fonts-emoji
-noto-fonts-extra
-pacman-contrib
-parcellite
-pavucontrol
-pwgen
-rsync
-scrot
-slock
-sysstat
-terminus-font
-the_silver_searcher
-tmux
-ttf-dejavu
-ttf-hack
-udisks2
-unzip
-xautolock
-xdg-utils
-xmlstarlet
-xorg-fonts-100dpi
-xorg-fonts-75dpi
-xorg-fonts-misc
-xorg-server
-xorg-xinit
-xorg-xrandr
-xsel
-yq
-zsh-completions
-
-Enable gpm: `systemctl add-wants getty.target gpm.service`
-
-#### AUR
-
-`pacaur -S ...`
-
-dapper
-gron-bin
-pulseaudio-ctl
-rcm
-redshift-minimal
-todotxt
-xlayoutdisplay
-
-### Arch Packages Laptops Like
-
-libinput-gestures
-xorg-xbacklight
-
-## Build Desktop Environment
 
 ### dwm and slstatus
 
