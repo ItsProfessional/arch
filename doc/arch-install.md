@@ -424,7 +424,11 @@ The device resets its volume every reboot.
 
 Unmute and set volume via `alsamixer`.
 
-Poke the `alsa-state.service` into action via one off `sudo alsactl daemon`.
+Poke the `alsa-state.service` into action:
+```
+sudo mkdir /etc/alsa
+sudo touch /etc/alsa/state-daemon.conf
+```
 
 ## Video Drivers
 
