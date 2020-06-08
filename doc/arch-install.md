@@ -314,6 +314,7 @@ AUR packages are at the end.
 
 `pacaur -S
 alacritty
+alsa-utils
 autofs
 calc
 chromium
