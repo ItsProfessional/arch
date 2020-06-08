@@ -1,5 +1,7 @@
 # Arch Installation
 
+This is very much the copy and paste guide to installation.
+
 Use the standard [Arch installation guide](https://wiki.archlinux.org/index.php/installation_guide) for reference.
 
 ## Preparation
@@ -356,7 +358,6 @@ xorg-xrandr
 xsel
 yq
 zsh-completions
-
 dapper
 gron-bin
 libinput-gestures
@@ -378,6 +379,29 @@ scp -pr .ssh gigantor:/home/alex
 git clone git@github.com:alex-courtis/arch.git ~/.dotfiles
 RCRC="${HOME}/.dotfiles/rcrc" rcup -v
 ```
+
+### Build Desktop Environment
+
+Window manager:
+```
+mkdir src
+cd src
+git clone git@github.com:alex-courtis/dwm.git
+cd dwm
+make && sudo make install
+cd ..
+git clone git@github.com:alex-courtis/slstatus.git
+cd slstatus
+make && sudo make install
+cd ..
+```
+
+Multitouch:
+`libinput-gestures-setup autostart`
+
+Redshift:
+`systemctl enable --user redshift`
+
 
 <<<<<<<
 
