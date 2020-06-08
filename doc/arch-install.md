@@ -295,7 +295,7 @@ Add the hostname to `/etc/hosts` first, as IPv4 local:
 
 You can check this with: `timedatectl status`
 
-### Install [pacaur](https://github.com/ajlende/dotbot-pacaur) to manage system and AUR packages.
+### Install [pacaur](https://aur.archlinux.org/packages/pacaur/)
 
 ```sh
 cd /tmp
@@ -402,12 +402,11 @@ Multitouch:
 Redshift:
 `systemctl enable --user redshift`
 
+### Done
 
-<<<<<<<
+Everything should start in your X environment... check `~/.local/share/xorg/Xorg.0.log`, `/tmp/x.${USER}.log`, `dmesg --human` and any console errors for oddities.
 
-# Post Installation
-
-## Video Driver
+## Video Drivers
 
 ### Modern AMD
 
@@ -453,27 +452,3 @@ Ban the nouveau module, which can block bbswitch, via `/etc/modprobe.d/blacklist
 blacklist nouveau
 ```
 
-### dwm and slstatus
-
-Clone the following:
-* `git@github.com:alex-courtis/dwm.git`
-* `git@github.com:alex-courtis/slstatus.git`
-
-Run for each:
-`make && sudo make install`
-
-### libinput-gestures
-
-`libinput-gestures-setup autostart`
-
-### Redshift
-
-`systemctl enable --user redshift`
-
-## Ready To Go
-
-Reboot
-
-Login at TTY1
-
-Everything should start in your X environment... check `~/.local/share/xorg/Xorg.0.log`, `/tmp/x.${USER}.log`, `dmesg --human` and any console errors for oddities.
