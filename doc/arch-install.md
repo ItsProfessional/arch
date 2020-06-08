@@ -140,7 +140,7 @@ UUID=c32b0c6b-e413-4eff-a873-6eab329dd245       none            swap            
 
 ### Packages Needed For Installation
 
-`pacman -S btrfs-progs efibootmgr git mkinitcpio networkmanager openssh pkgfile sudo terminus-font vim zsh`
+`pacman -S btrfs-progs efibootmgr git gvim mkinitcpio networkmanager openssh pkgfile sudo terminus-font zsh`
 
 Populate the package cache:
 `pkgfile --update`
