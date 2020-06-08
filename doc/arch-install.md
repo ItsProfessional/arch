@@ -414,17 +414,16 @@ Everything should start in your X environment... check `~/.local/share/xorg/Xorg
 Firmware:
 `pacaur -S sof-firmware`
 
-Pulse doesn't load it automatically. Modify `/etc/pulse/default.pa`:
-
+The device does not automatically register as the alsa default. Force it via kernel module config `/etc/modprobe.d/sof_hda_dsp.conf`:
 ```
-load-module module-alsa-sink device=hw:0,0 channels=4
-load-module module-alsa-source device=hw:0,6 channels=4
+options sof_hda_dsp index=0
 ```
 
-That assumes that the device is index 0. Ensure this via snd kernel module config `/etc/modprobe.d/snd.conf`:
-```
-options snd slots=snd_soc_skl_hda_dsp
-```
+The device resets its volume every reboot.
+
+Unmute and set volume via `alsamixer`.
+
+Poke the `alsa-state.service` into action via one off `sudo alsactl daemon`.
 
 ## Video Drivers
 
