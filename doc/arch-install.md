@@ -368,7 +368,7 @@ todotxt
 xlayoutdisplay
 `
 
-Install [au drivers](##ADrivers) [video drivers](##VideoDrivers) at this point.
+Install video drivers at this point.
 
 ### Setup CLI User Environment
 
