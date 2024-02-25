@@ -1,8 +1,7 @@
-local util = require("amc.util")
-local buffers = util.require("amc.buffers")
-local env = util.require("amc.env")
-local windows = util.require("amc.windows")
-local nvim_tree = util.require_or_nil("amc.plugins.nvt") or {}
+local buffers = require("amc.buffers")
+local env = require("amc.env")
+local windows = require("amc.windows")
+local nvim_tree = require("amc.plugins.nvt")
 
 local group = vim.api.nvim_create_augroup("amc", { clear = true })
 

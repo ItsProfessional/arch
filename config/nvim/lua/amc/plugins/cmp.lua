@@ -1,5 +1,4 @@
-local util = require("amc.util")
-local cmp = util.require_or_nil("cmp")
+local cmp = require("cmp")
 
 local M = {}
 

@@ -1,6 +1,5 @@
-local util = require("amc.util")
-local log = util.require("amc.log")
-local lualine = util.require_or_nil("lualine")
+local log = require("amc.log")
+local lualine = require("lualine")
 
 local M = {}
 

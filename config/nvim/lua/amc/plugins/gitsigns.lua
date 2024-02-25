@@ -1,5 +1,4 @@
-local util = require("amc.util")
-local gitsigns = util.require_or_nil("gitsigns")
+local gitsigns = require("gitsigns")
 
 local M = {}
 

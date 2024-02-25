@@ -1,5 +1,4 @@
-local util = require("amc.util")
-local stylua = util.require_or_nil("stylua-nvim")
+local stylua = require("stylua-nvim")
 
 local M = {}
 

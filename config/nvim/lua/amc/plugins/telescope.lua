@@ -1,11 +1,10 @@
-local util = require("amc.util")
-local windows = util.require("amc.windows")
-local telescope = util.require_or_nil("telescope")
-local actions = util.require_or_nil("telescope.actions")
-local action_set = util.require_or_nil("telescope.actions.set")
-local action_state = util.require_or_nil("telescope.actions.state")
-local builtin = util.require_or_nil("telescope.builtin")
-local config = util.require_or_nil("telescope.config")
+local windows = require("amc.windows")
+local telescope = require("telescope")
+local actions = require("telescope.actions")
+local action_set = require("telescope.actions.set")
+local action_state = require("telescope.actions.state")
+local builtin = require("telescope.builtin")
+local config = require("telescope.config")
 
 local M = {}
 

@@ -1,7 +1,6 @@
-local util = require("amc.util")
-local formatter = util.require_or_nil("formatter")
-local formatter_format = util.require_or_nil("formatter.format")
-local formatter_util = util.require_or_nil("formatter.util")
+local formatter = require("formatter")
+local formatter_format = require("formatter.format")
+local formatter_util = require("formatter.util")
 
 local M = {}
 

@@ -1,6 +1,5 @@
-local util = require("amc.util")
-local lspconfig = util.require_or_nil("lspconfig")
-local cmp_nvim_lsp = util.require_or_nil("cmp_nvim_lsp")
+local lspconfig = require("lspconfig")
+local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
 local M = {}
 

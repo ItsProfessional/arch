@@ -1,6 +1,5 @@
-local util = require("amc.util")
-local formatter = util.require_or_nil("amc.plugins.formatter")
-local stylua = util.require_or_nil("stylua-nvim")
+local formatter = require("amc.plugins.formatter")
+local stylua = require("stylua-nvim")
 
 local M = {}
 

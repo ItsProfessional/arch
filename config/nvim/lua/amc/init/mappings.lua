@@ -1,14 +1,12 @@
-local util = require("amc.util")
+local K = require("amc.keymap")
 
-local K = util.require("amc.keymap")
+local buffers = require("amc.buffers")
+local dev = require("amc.dev")
+local windows = require("amc.windows")
 
-local buffers = util.require("amc.buffers")
-local dev = util.require("amc.dev")
-local windows = util.require("amc.windows")
-
-local nvim_tree = util.require_or_nil("amc.plugins.nvt") or {}
-local telescope = util.require_or_nil("amc.plugins.telescope") or {}
-local lsp = util.require_or_nil("amc.plugins.lsp") or {}
+local nvim_tree = require("amc.plugins.nvt")
+local telescope = require("amc.plugins.telescope")
+local lsp = require("amc.plugins.lsp")
 
 -- hacky vim clipboard=autoselect https://github.com/neovim/neovim/issues/2325
 K.vm__("<LeftRelease>", '"*ygv')

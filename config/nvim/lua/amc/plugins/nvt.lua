@@ -1,8 +1,7 @@
-local util = require("amc.util")
-local env = util.require("amc.env")
-local telescope = util.require_or_nil("amc.plugins.telescope")
-local tree = util.require_or_nil("nvim-tree")
-local api = util.require_or_nil("nvim-tree.api")
+local env = require("amc.env")
+local telescope = require("amc.plugins.telescope")
+local tree = require("nvim-tree")
+local api = require("nvim-tree.api")
 
 local M = {}
 

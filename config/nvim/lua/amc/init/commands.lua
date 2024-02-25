@@ -1,7 +1,6 @@
-local util = require("amc.util")
-local buffers = util.require("amc.buffers")
-local env = util.require("amc.env")
-local telescope = util.require_or_nil("amc.plugins.telescope")
+local buffers = require("amc.buffers")
+local env = require("amc.env")
+local telescope = require("amc.plugins.telescope")
 
 -- return to initial cwd
 vim.api.nvim_create_user_command("CD", function()
