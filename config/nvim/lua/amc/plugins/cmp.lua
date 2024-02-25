@@ -1,9 +1,7 @@
-local cmp = require("cmp")
+local present, cmp = pcall(require, "cmp")
 
-local M = {}
-
-if not cmp then
-  return M
+if not present then
+  return
 end
 
 local config = {
@@ -31,5 +29,3 @@ local config = {
 
 --init
 cmp.setup(config)
-
-return M
