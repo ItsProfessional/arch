@@ -1,7 +1,7 @@
-local formatter = require("amc.plugins.formatter")
-local stylua = require("stylua-nvim")
-
 local M = {}
+
+local formatter_amc = require("amc.plugins.formatter")
+local stylua_ok, stylua = pcall(require, "stylua-nvim")
 
 --- @enum dev.build_type
 M.build_type = {
@@ -99,12 +99,12 @@ function M.lsp_rename()
 end
 
 function M.format()
-  if stylua and vim.bo.filetype == "lua" then
+  if stylua_ok and vim.bo.filetype == "lua" then
     stylua.format_file()
     return
   end
 
-  if formatter and formatter.format and formatter.format() then
+  if formatter_amc.format and formatter_amc.format() then
     return
   end
 

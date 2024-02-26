@@ -1,13 +1,15 @@
-local env = require("amc.env")
-local telescope = require("amc.plugins.telescope")
-local tree = require("nvim-tree")
-local api = require("nvim-tree.api")
-
 local M = {}
 
-if not tree or not api then
+local env = require("amc.env")
+
+local tree_ok, tree = pcall(require, "nvim-tree")
+local telescope_ok, telescope = pcall(require, "amc.plugins.telescope")
+
+if not tree_ok then
   return M
 end
+
+local api = require("nvim-tree.api")
 
 local IGNORED_FT = {
   "gitcommit",
@@ -30,22 +32,20 @@ local function node_path_dir()
 end
 
 local function find_files()
-  if not telescope then
-    return
-  end
-  local _, dir = node_path_dir()
-  if dir then
-    telescope.find_files({ search_dirs = { dir } })
+  if telescope_ok then
+    local _, dir = node_path_dir()
+    if dir then
+      telescope.find_files({ search_dirs = { dir } })
+    end
   end
 end
 
 local function live_grep()
-  if not telescope then
-    return
-  end
-  local _, dir = node_path_dir()
-  if dir then
-    telescope.live_grep({ search_dirs = { dir } })
+  if telescope_ok then
+    local _, dir = node_path_dir()
+    if dir then
+      telescope.live_grep({ search_dirs = { dir } })
+    end
   end
 end
 
@@ -81,7 +81,7 @@ local function toggle_width_adaptive()
     view_width_max = -1
   end
 
-  require("nvim-tree.api").tree.reload()
+  api.tree.reload()
 end
 
 -- get current view width
@@ -151,7 +151,7 @@ local config = {
   view = {
     width = {
       max = get_view_width_max,
-    }
+    },
   },
   renderer = {
     highlight_git = "none",

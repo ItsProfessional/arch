@@ -1,9 +1,9 @@
-local lspconfig = require("lspconfig")
-local cmp_nvim_lsp = require("cmp_nvim_lsp")
-
 local M = {}
 
-if not lspconfig or not cmp_nvim_lsp then
+local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
+local cmp_nvim_lsp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+
+if not lspconfig_ok or not cmp_nvim_lsp_ok then
   return M
 end
 

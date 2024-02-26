@@ -1,16 +1,18 @@
+local M = {}
+
 local windows = require("amc.windows")
-local telescope = require("telescope")
+
+local telescope_ok, telescope = pcall(require, "telescope")
+
+if not telescope_ok then
+  return M
+end
+
 local actions = require("telescope.actions")
 local action_set = require("telescope.actions.set")
 local action_state = require("telescope.actions.state")
 local builtin = require("telescope.builtin")
 local config = require("telescope.config")
-
-local M = {}
-
-if not telescope or not actions or not action_set or not action_state or not builtin or not config then
-  return M
-end
 
 telescope.load_extension("smart_history")
 

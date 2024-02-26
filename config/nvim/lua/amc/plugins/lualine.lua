@@ -1,10 +1,9 @@
 local log = require("amc.log")
-local lualine = require("lualine")
 
-local M = {}
+local lualine_ok, lualine = pcall(require, "lualine")
 
-if not lualine then
-  return M
+if not lualine_ok then
+  return
 end
 
 local filename = {
@@ -167,5 +166,3 @@ local config = {
 
 -- init
 lualine.setup(config)
-
-return M

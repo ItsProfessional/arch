@@ -1,10 +1,8 @@
-local formatter = require("formatter")
-local formatter_format = require("formatter.format")
-local formatter_util = require("formatter.util")
-
 local M = {}
 
-if not formatter or not formatter_format or not formatter_util then
+local formatter_ok, formatter = pcall(require,"formatter")
+
+if not formatter_ok then
   return M
 end
 
