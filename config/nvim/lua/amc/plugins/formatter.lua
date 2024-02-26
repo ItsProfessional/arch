@@ -1,6 +1,6 @@
 local M = {}
 
-local formatter_ok, formatter = pcall(require,"formatter")
+local formatter_ok, formatter = pcall(require, "formatter")
 
 if not formatter_ok then
   return M

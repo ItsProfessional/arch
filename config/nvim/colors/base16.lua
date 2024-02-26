@@ -3,9 +3,9 @@ if tonumber(vim.o.t_Co) < 256 or vim.env.TERM == "linux" then
   return
 end
 
-local present, mini_base16 = pcall(require, "mini.base16")
+local mini_base16_ok, mini_base16 = pcall(require, "mini.base16")
 
-if not present then
+if not mini_base16_ok then
   return
 end
 
