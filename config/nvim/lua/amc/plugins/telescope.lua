@@ -1,6 +1,7 @@
-local M = {}
+local util = require("amc.util")
+local windows = util.require_or_empty("amc.windows")
 
-local windows = require("amc.windows")
+local M = {}
 
 local telescope_ok, telescope = pcall(require, "telescope")
 
