@@ -1,2 +1,4 @@
-pcall(require, "amc.init.early.appearance")
-pcall(require, "amc.init.early.dirs")
+local require = require("amc.require_or_nil")
+
+require("amc.init.early.appearance")
+require("amc.init.early.dirs")

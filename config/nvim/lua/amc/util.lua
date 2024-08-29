@@ -1,18 +1,5 @@
 local M = {}
 
----require a module, printing error and returning empty table on failure
----@param modname string
----@return table
-function M.require_or_empty(modname)
-  local ok, module = pcall(require, modname)
-  if ok then
-    return module
-  else
-    print(module)
-    return {}
-  end
-end
-
 --- au BufEnter
 --- @param data table
 function M.reset_mappings(data)

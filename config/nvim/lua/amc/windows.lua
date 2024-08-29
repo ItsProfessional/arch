@@ -1,6 +1,8 @@
 local CLOSE_INC = require("amc.enum").CLOSE_INC
 
-local _, buffers = pcall(require, "amc.buffers")
+local require = require("amc.require_or_nil")
+
+local buffers = require("amc.buffers")
 
 local M = {}
 

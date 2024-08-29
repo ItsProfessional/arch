@@ -4,11 +4,11 @@ if #(vim.fn.getcwd()) == 0 then
 end
 
 local log = require("amc.log")
-
 local util = require("amc.util")
+local require_or_nil = require("amc.require_or_nil")
 
 log.line("---- options")
-require("amc.options")
+require_or_nil("amc.options")
 
 log.line("---- pckr bootstrap")
 local pckr_path = vim.fn.stdpath("data") .. "/pckr/pckr.nvim"

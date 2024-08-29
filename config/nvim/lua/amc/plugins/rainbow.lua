@@ -1,12 +1,13 @@
+local require = require("amc.require_or_nil")
+
 local M = {}
 
-local rainbow_ok, rainbow = pcall(require, "rainbow-delimiters")
+local rainbow = require("rainbow-delimiters")
+local rainbow_setup = require("rainbow-delimiters.setup")
 
-if not rainbow_ok then
+if not rainbow or not rainbow_setup then
   return M
 end
-
-local rainbow_setup = require("rainbow-delimiters.setup")
 
 rainbow_setup.setup({
   strategy = {

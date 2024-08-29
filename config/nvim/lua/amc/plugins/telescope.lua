@@ -1,13 +1,14 @@
-local util = require("amc.util")
-local windows = util.require_or_empty("amc.windows")
+local require = require("amc.require_or_nil")
 
 local M = {}
 
-local telescope_ok, telescope = pcall(require, "telescope")
+local telescope = require("telescope")
 
-if not telescope_ok then
+if not telescope then
   return M
 end
+
+local windows = require("amc.windows")
 
 local actions = require("telescope.actions")
 local action_set = require("telescope.actions.set")
@@ -186,7 +187,9 @@ local function extend_builtins()
   for n, f in pairs(builtin) do
     if type(f) == "function" then
       M[n] = function(o)
-        windows.go_home()
+        if windows then
+          windows.go_home()
+        end
         return f(opts(o))
       end
     end

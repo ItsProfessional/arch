@@ -1,13 +1,18 @@
-local buffers = require("amc.buffers")
-local log = require("amc.log")
 local env = require("amc.env")
+local log = require("amc.log")
 local SPECIAL = require("amc.enum").SPECIAL
 
---- wipe directory buffers
-for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-  if buffers.special(bufnr) == SPECIAL.dir then
-    env.startup_dir = vim.api.nvim_buf_get_name(bufnr)
-    vim.cmd.bwipeout(bufnr)
+local require = require("amc.require_or_nil")
+
+local buffers = require("amc.buffers")
+
+if buffers then
+  --- wipe directory buffers
+  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+    if buffers.special(bufnr) == SPECIAL.dir then
+      env.startup_dir = vim.api.nvim_buf_get_name(bufnr)
+      vim.cmd.bwipeout(bufnr)
+    end
   end
 end
 
