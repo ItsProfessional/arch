@@ -45,7 +45,7 @@ local plugins = {
 if not vim.env.TERM:match("^linux") then
   table.insert(plugins, "nvim-tree/nvim-web-devicons")
 end
-if require("amc.packer")(plugins) then
+if require("amc.pack")(plugins) then
   return
 end
 
